@@ -210,7 +210,4 @@ This project is intended for educational and research purposes.
 ## Author
 
 Anelia Savova  
-Software Engineer  
 
-GitHub: https://github.com/asavova  
-LinkedIn: https://www.linkedin.com/in/anelia-savova-95ba88206/
