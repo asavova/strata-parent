@@ -1,227 +1,52 @@
 # Strata Engine
 
-A Java-based layered strategy board-game engine built with a focus on bitboard optimization, 3D board topology, and AI-ready architecture.
+Strata is a Java 21 engine for a turn-based strategy board game played across seven layers. The project focuses on board representation, movement rules, game-state management, and efficient move generation.
 
-This project is designed as a modular, extensible engine suitable for research, prototyping, and advanced game AI development.
+## Core engine
 
----
+The standalone `strata-core` module uses a 126-node board (7 layers of 3 × 6 positions) and a two-`long` bitboard representation. It contains:
 
-## Overview
-
-Strata Engine implements a 126-node 3D board system using high-performance bitboards and a layered coordinate structure.
-
-The engine includes:
-- Bitboard-based game state representation
-- Multi-layer (3D) board geometry
+- Board geometry and coordinate conversion
 - Precomputed movement masks
-- Turn-based game engine with move application and partial undo support (full state restoration is not yet verified)
-- Piece transformation system
-- AI-ready evaluation and search framework
-- JSON export for external integrations
+- Piece ownership, types, and transformation stages
+- Move generation and capture rules
+- Win-condition checks
+- Game-state copying, move application, and partial undo support
 
----
+The core is plain Java. It does not require a Python service, neural network, external API, or GPU.
 
-## Board Architecture
+## Build
 
-The board consists of:
-- 7 layers
-- Each layer is a 3 × 6 grid
-- Total positions: 126 nodes
+Requirements: JDK 21 and Maven 3.9+.
 
-### Coordinate System
-
-(layer, row, column)
-
-### Node ID Formula
-
-nodeId = layer * 18 + row * 6 + column
-
----
-
-## Bitboard System
-
-Due to the 126-node board, each bitboard is implemented using two long values:
-
-class BitBoard {
-    long lowBits;  // nodes 0–63
-    long highBits; // nodes 64–125
-}
-
-### Supported Operations
-
-- set(nodeId)
-- clear(nodeId)
-- isSet(nodeId)
-- and(BitBoard)
-- or(BitBoard)
-- xor(BitBoard)
-- not()
-- popcount()
-
----
-
-## Gameplay Features
-
-### Players
-- WHITE
-- BLACK
-
-### Piece Types
-Each player controls:
-- ADEPT – same-layer movement
-- ELEMENTAL – diagonal and vertical movement
-- GUARDIAN – orthogonal movement
-
-Each player starts with 27 pieces.
-
----
-
-## Transformation System
-
-Each piece progresses through a 9-stage transformation cycle:
-
-CALCINATION → DISSOLUTION → SEPARATION → CONJUNCTION → FERMENTATION → DISTILLATION → COAGULATION → ILLUMINATION → PHILOSOPHERS_STONE
-
-Each move advances the stage:
-stage = (stage + 1) % 9
-
----
-
-## Movement Rules
-
-Movement is generated using precomputed masks:
-- adjacentMask
-- diagonalMask
-- orthogonalMask
-
-### Movement Types
-
-ADEPT:
-- Moves to adjacent nodes
-
-ELEMENTAL:
-- Moves diagonally and across layers until blocked
-
-GUARDIAN:
-- Moves orthogonally and across layers until blocked
-
-Rules:
-- Cannot land on friendly pieces
-- Can capture enemy pieces
-- Sliding movement stops at blockers
-
----
-
-## AI System
-
-The engine supports AI via:
-- Minimax Search
-- Alpha-Beta Pruning
-- Evaluation Function
-
-### Evaluation Factors
-- Center layer control
-- Piece count
-- Piece transformation stage
-- Mobility
-
----
-
-## Win Conditions
-
-Primary:
-- Control key nodes on the central layer (layer 3)
-
-Alternative:
-- Capture all opponent pieces that reached PHILOSOPHERS_STONE
-
----
-
-## JSON Export
-
-Game state can be exported using:
-
-JsonExporter.exportGameState(GameState state)
-
-The output includes:
-- Piece locations
-- Piece types
-- Piece stages
-- Active player
-
-This enables integration with external AI systems.
-
----
-
-## Project Structure
-
-core/      Core engine logic  
-board/     Board geometry and coordinates  
-model/     Data models (GameState, Move, Pieces)  
-engine/    Game engine logic  
-rules/     Movement and game rules  
-ai/        AI (Minimax, evaluation, search)  
-api/       JSON export and interfaces  
-util/      Utilities and helpers  
-
----
-
-## Build status
-
-The standalone Java game engine (`strata-core`) targets Java 21 and is included in the root Maven build.
-
-Run from the repository root:
+From the repository root:
 
 ```bash
 mvn clean verify
 ```
 
-Other modules (`strata-ai`, `strata-app`, `strata-engine`, and `strata-protocol`) are present but are not included in the default Maven reactor yet. Some have unresolved source and integration dependencies; they need separate build validation before being enabled. No Python server, network connection, or ML model is required for the core build.
+The default Maven reactor builds the `strata-core` module. A GitHub Actions workflow checks this build using Java 21.
 
----
+## Repository layout
 
-## Getting Started
+- `strata-core/` — standalone board-game logic, rules, and state management; **the scope of the core engine project**
+- `strata-engine/` — early application scaffold, not in the default build
+- `strata-app/` — application assembly, not in the default build
+- `strata-protocol/` — experimental integration protocol, not in the default build
+- `strata-ai/` — optional classical search and experimental ML integration, not in the default build
 
-Requirements:
-- Java 21 and Maven 3.9+
-- IntelliJ IDEA recommended
+The integration modules are retained as historical/experimental work. They are **not required for the standalone engine and are not part of the proposed non-ML development scope**. Building them separately may require additional fixes and dependencies.
 
-Steps:
-1. Clone the repository:
-   git clone https://github.com/asavova/strata-parent.git
+## Current limitations
 
-2. Open in IntelliJ IDEA
-3. From the repository root, run `mvn clean verify` to build the standalone core module. The other modules are not part of the default build yet.
-
----
-
-## Design Principles
-
-- Bitboard efficiency for fast computation
-- Precomputed movement masks for performance
-- Clean modular architecture
-- Modular engine architecture with optional AI integration
-- Extensibility
-
----
-
-## Future Improvements
-
-- Advanced AI heuristics
-- Neural network integration
-- Parallel move evaluation
-- Multiplayer support
-- Visualization tools
-
----
+- The default build covers `strata-core`, not every module in the repository.
+- Full undo state restoration and comprehensive automated tests still need work.
+- Engine performance and consistency under larger game workloads have not been benchmarked.
 
 ## License
 
 MIT License. See [LICENSE](LICENSE).
 
----
-
 ## Author
 
-Anelia Savova  
-
+Anelia Savova
