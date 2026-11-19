@@ -166,6 +166,20 @@ util/      Utilities and helpers
 
 ---
 
+## Build status
+
+The standalone Java game engine (`strata-core`) targets Java 21 and is included in the root Maven build.
+
+Run from the repository root:
+
+```bash
+mvn clean verify
+```
+
+Other modules (`strata-ai`, `strata-app`, `strata-engine`, and `strata-protocol`) are present but are not included in the default Maven reactor yet. Some have unresolved source and integration dependencies; they need separate build validation before being enabled. No Python server, network connection, or ML model is required for the core build.
+
+---
+
 ## Getting Started
 
 Requirements:
