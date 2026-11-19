@@ -14,7 +14,7 @@ The engine includes:
 - Bitboard-based game state representation
 - Multi-layer (3D) board geometry
 - Precomputed movement masks
-- Turn-based game engine with undo/redo support
+- Turn-based game engine with move application and partial undo support (full state restoration is not yet verified)
 - Piece transformation system
 - AI-ready evaluation and search framework
 - JSON export for external integrations
@@ -183,7 +183,7 @@ Other modules (`strata-ai`, `strata-app`, `strata-engine`, and `strata-protocol`
 ## Getting Started
 
 Requirements:
-- Java 17+
+- Java 21 and Maven 3.9+
 - IntelliJ IDEA recommended
 
 Steps:
@@ -191,7 +191,7 @@ Steps:
    git clone https://github.com/asavova/strata-parent.git
 
 2. Open in IntelliJ IDEA
-3. Build and run the project
+3. From the repository root, run `mvn clean verify` to build the standalone core module. The other modules are not part of the default build yet.
 
 ---
 
@@ -200,7 +200,7 @@ Steps:
 - Bitboard efficiency for fast computation
 - Precomputed movement masks for performance
 - Clean modular architecture
-- AI-first design
+- Modular engine architecture with optional AI integration
 - Extensibility
 
 ---
@@ -217,7 +217,7 @@ Steps:
 
 ## License
 
-This project is intended for educational and research purposes.
+MIT License. See [LICENSE](LICENSE).
 
 ---
 
